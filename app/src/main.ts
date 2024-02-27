@@ -1,6 +1,7 @@
 import { geminiService } from '@/services'
 import { cache as libCache, properties } from '@/lib'
 import { generateHash } from '@/utils'
+import { GEMINI_API_KEY_SCRIPT_PROPERTY } from '@/config'
 
 global.onOpen = () => {
   // カスタムメニューを追加
@@ -22,7 +23,7 @@ global.showApiKeyInputForm = () => {
  * APIキーを保存します。
  */
 global.saveApiKey = (apiKey: string) => {
-  properties.set('geminiApiKey', apiKey)
+  properties.set(GEMINI_API_KEY_SCRIPT_PROPERTY, apiKey)
 }
 
 /**

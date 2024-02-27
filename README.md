@@ -10,7 +10,7 @@ docker-compose up -d
 ```
 ### 3. 必要なモジュールをインストールする
 ```
-docker exec -it gemmini-ai-custom-function yarn install
+docker exec -it gemmini-ai-custom-function yarn initenv
 ```
 ### 4. claspにログインする
 1. コンテナに入る
@@ -41,5 +41,5 @@ yarn build
 ```
 ### 8. Google App script に push する
 ```
-clasp push
+yarn deploy
 ```

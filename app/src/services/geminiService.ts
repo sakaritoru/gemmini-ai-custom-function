@@ -2,8 +2,7 @@ import type { GenerateContentRequest, GenerateContentResponse } from '@google/ge
 import { fetcher, properties } from '@/lib'
 import { generateUrl } from '@/utils'
 import { GeminiRole } from '@/types'
-
-const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent'
+import { GEMINI_API_KEY_SCRIPT_PROPERTY, GEMINI_API_URL } from '@/config'
 
 const geminiService = {
   /**
@@ -38,13 +37,13 @@ const geminiService = {
    */
   requestGemini(payload: GenerateContentRequest) {
     // APIキーを設定
-    const key = properties.get('geminiApiKey')
+    const key = properties.get(GEMINI_API_KEY_SCRIPT_PROPERTY)
 
     if (!key) {
       throw new Error('APIキーを設定してください。')
     }
 
-    const requestUrl = generateUrl(API_URL, { key })
+    const requestUrl = generateUrl(GEMINI_API_URL, { key })
 
     return fetcher<GenerateContentResponse>(requestUrl, {
       headers: {
