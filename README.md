@@ -1,27 +1,45 @@
-## 環境構築
-### claspにログインする
-1. コンテナの中に入り以下のコマンドを実行します。
+# スプレッドシートカスタム関数（GEMINI）
+## get started
+### 1. Dockerのイメージをビルドする
+```
+docker-compose build
+```
+### 2. Dockerを起動する
+```
+docker-compose up -d
+```
+### 3. 必要なモジュールをインストールする
+```
+docker exec -it gemmini-ai-custom-function yarn install
+```
+### 4. claspにログインする
+1. コンテナに入る
+```
+docker exec -it gemmini-ai-custom-function bash
+```
+2. 以下のコマンドを実行します。
 ```shell
 clasp login
 ```
-2. コマンド実行後に表示されたURLにアクセスしgoogleログインします。
-3. ログイン後、リダイレクトされたURLをコピーします。
-4. 別のターミナルでコンテナの中に入り、curlコマンドでリダイレクトされたURLにアクセスします。
+3. コマンド実行後に表示されたURLにアクセスしgoogleログインします。
+4. ログイン後、リダイレクトされたURLをコピーします。
+5. 別のターミナルでコンテナの中に入り、curlコマンドでリダイレクトされたURLにアクセスします。
 ```shell
 curl http://localhost:xxxx/?code=xxx
 ```
-5. ログインが完了します。
-
-### .clasp.jsonを生成する
-1. ログイン後以下コマンドを実行し、.clasp.jsonを作成します。
+### 5. clasp.jsonを生成する
 ```shell
-clasp cleate
+clasp create --type sheets
 ```
-2. 「Create which script?」と質問されるので以下を選択してください。
+### 6. .clasp.jsonのrootDirの値を以下に書き換える
+```
+/usr/src/app/dist
+```
+### 7. コードをビルドする
 ```shell
-standalone
+yarn build
 ```
-3. appディレクトリー配下に以下ファイルが生成されたら完了です。
-- .clasp.json
-- appsscript.json
-
+### 8. Google App script に push する
+```
+clasp push
+```
