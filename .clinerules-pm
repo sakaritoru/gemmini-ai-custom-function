@@ -6,3 +6,45 @@ methodology:
 permissions:
   - read: [task.md, doing.md, done.md, development-status.md]
   - write: [task.md, doing.md, done.md, development-status.md]
+
+tools:
+  github:
+    create_issue:
+      purpose: "新規issueの作成、タスク管理"
+      usage: "タスク管理、機能要望の記録"
+    create_branch:
+      purpose: "機能開発用の新規ブランチ作成"
+      usage: "作業用ブランチの分離"
+    create_or_update_file:
+      purpose: "プロジェクト関連ファイルの作成・更新"
+      usage: "設定ファイル、ドキュメントの管理"
+    create_pull_request:
+      purpose: "変更のレビュー依頼、マージ準備"
+      usage: "コードレビュー、変更の統合"
+  playwright:
+    playwright_navigate:
+      purpose: "ドキュメントやWebページの参照"
+      usage: "APIドキュメントの参照"
+    playwright_get_visible_text:
+      purpose: "ページ内容の取得・確認"
+      usage: "ドキュメント内容の解析"
+
+workflows:
+  documentation:
+    description: "ドキュメント参照手順"
+    steps:
+      - navigate_to_docs
+      - extract_content
+      - analyze_and_use
+  issue_management:
+    description: "issue作成から管理まで"
+    steps:
+      - create_new_issue
+      - set_metadata
+      - track_progress
+  code_change:
+    description: "コード変更の手順"
+    steps:
+      - create_feature_branch
+      - implement_changes
+      - request_review
