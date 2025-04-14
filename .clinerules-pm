@@ -1,0 +1,8 @@
+role: project-manager
+workspace: .cline/pm
+methodology:
+  - agile
+  - pomodoro
+permissions:
+  - read: [task.md, doing.md, done.md, development-status.md]
+  - write: [task.md, doing.md, done.md, development-status.md]
