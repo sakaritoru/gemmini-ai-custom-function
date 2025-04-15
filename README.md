@@ -23,7 +23,7 @@ clasp login
 ```
 3. コマンド実行後に表示されたURLにアクセスしgoogleログインします。
 4. ログイン後、リダイレクトされたURLをコピーします。
-5. 別のターミナルでコンテナの中に入り、curlコマンドでリダイレクトされたURLにアクセスします。
+5. 元のターミナルでコンテナの中に入り、curlコマンドでリダイレクトされたURLにアクセスします。
 ```shell
 curl http://localhost:xxxx/?code=xxx
 ```
@@ -42,4 +42,21 @@ yarn build
 ### 8. Google App script に push する
 ```
 yarn deploy
+```
+
+## テストの実行方法
+
+### 1. テストを実行する
+```shell
+docker exec -it gemmini-ai-custom-function yarn test
+```
+
+### 2. テストカバレッジを確認する
+```shell
+docker exec -it gemmini-ai-custom-function yarn test:coverage
+```
+
+### 3. テストを監視モードで実行する
+```shell
+docker exec -it gemmini-ai-custom-function yarn test:watch
 ```
