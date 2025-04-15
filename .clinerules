@@ -22,8 +22,6 @@ sakaritoru
 
 ### github
 
-https://github.com/modelcontextprotocol/servers/tree/main/src/github
-
 ### 1. create_or_update_file
 リポジトリ内の単一ファイルを作成または更新します。
 ```typescript
@@ -187,8 +185,6 @@ issueとプルリクエストを検索します。
 
 ### puppeteer
 
-https://github.com/modelcontextprotocol/servers/tree/main/src/puppeteer
-
 #### 1. puppeteer_navigate
 ブラウザでURLに移動します。
 ```typescript
@@ -266,11 +262,11 @@ issueを作成する
 ### ステップ6
 ブランチを切り替える
 
-### ステップ6
+### ステップ7
 必要なファイルを作成・更新し、コミットする
 
-### ステップ7
+### ステップ8
 コミットをプッシュする
 
-### ステップ7
+### ステップ9
 プルリクを作成し、変更のレビュー依頼を行う
