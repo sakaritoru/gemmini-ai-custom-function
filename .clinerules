@@ -2,54 +2,64 @@
 
 ## 役割
 あなたはこのプロジェクトのリードエンジニアです。「ワークフロー」のステップに従って作業を進めてください。
-必要であれば、「利用可能なmcpツール」を使用してください。
 
 ## ルール
 - ステップバイステップで作業を進めてください。
 - 必ずどのステップの作業を行なっているかを明示してください。
 - ステップの作業が完了したら、必ず「次のステップに進む」と明示してください。
 - APIなどでエラーが発生した場合は、一旦作業を止めて確認してください。
+- コマンド実行時は、完全な出力を待機してから次のステップに進んでください。
 
 ## プロジェクト概要
 
-### リポジトリー
+### githubリポジトリー
 gemmini-ai-custom-function
 
-### オーナー
+### githubオーナー
 sakaritoru
 
-## 利用可能なmcpツール
+### notionデータベースID
+1ca05910f17280f4bea5f10253ff7ae8
+
+## ワークフローで利用するコマンド
+
+### ブランチの作成
+```bash
+git checkout main
+git pull
+git branch feature/issue<issue_number>
+```
+
+### 作業内容をコミット
+```bash
+git add .
+git commit -m "<commit_message>"
+```
+
+### 作業内容をプッシュ
+```bash
+git push origin feature/issue<issue_number>
+```
+
+### パッケージのインストール
+```bash
+yarn add <package_name>
+```
+または
+```bash
+yarn add -D <package_name>
+```
+
+### ESlintの実行
+```bash
+yarn fix:eslint
+```
+
+## ワークフローで利用するmcpツール
 
 ### github
 
-### 1. create_or_update_file
-リポジトリ内の単一ファイルを作成または更新します。
-```typescript
-{
-  "owner": string,      // リポジトリのオーナー（ユーザー名または組織名）
-  "repo": string,       // リポジトリ名
-  "path": string,       // ファイルのパス
-  "content": string,    // ファイルの内容
-  "message": string,    // コミットメッセージ
-  "branch": string,     // 作成/更新するブランチ
-  "sha": string        // (任意) 更新時の既存ファイルのSHA
-}
-```
-#### 2. push_files
-複数のファイルを1つのコミットでプッシュします。
-```typescript
-{
-  "owner": string,      // リポジトリのオーナー
-  "repo": string,       // リポジトリ名
-  "branch": string,     // プッシュ先のブランチ
-  "files": Array<{      // プッシュするファイルの配列
-    "path": string,     // ファイルのパス
-    "content": string   // ファイルの内容
-  }>,
-  "message": string     // コミットメッセージ
-}
-```
-#### 3. get_file_contents
+#### get_file_contents
 ファイルまたはディレクトリの内容を取得します。
 ```typescript
 {
@@ -59,36 +69,8 @@ sakaritoru
   "branch": string      // (任意) 対象のブランチ
 }
 ```
-#### 4. create_repository
-新しいGitHubリポジトリを作成します。
-```typescript
-{
-  "name": string,           // リポジトリ名
-  "description": string,    // (任意) リポジトリの説明
-  "private": boolean,       // (任意) プライベートリポジトリにするか
-  "autoInit": boolean      // (任意) READMEで初期化するか
-}
-```
-#### 5. fork_repository
-リポジトリをフォークします。
-```typescript
-{
-  "owner": string,          // 元のリポジトリのオーナー
-  "repo": string,          // 元のリポジトリ名
-  "organization": string    // (任意) フォーク先の組織名
-}
-```
-#### 6. create_branch
-新しいブランチを作成します。
-```typescript
-{
-  "owner": string,         // リポジトリのオーナー
-  "repo": string,         // リポジトリ名
-  "branch": string,       // 新しいブランチ名
-  "from_branch": string   // (任意) 作成元のブランチ名
-}
-```
-#### 7. create_issue
+
+#### create_issue
 新しいissueを作成します。
 ```typescript
 {
@@ -101,7 +83,8 @@ sakaritoru
   "milestone": number     // (任意) マイルストーン番号
 }
 ```
-#### 8. update_issue
+
+#### update_issue
 既存のissueを更新します。
 ```typescript
 {
@@ -116,7 +99,8 @@ sakaritoru
   "milestone": number     // (任意) 新しいマイルストーン番号
 }
 ```
-#### 9. add_issue_comment
+
+#### add_issue_comment
 issueにコメントを追加します。
 ```typescript
 {
@@ -126,7 +110,7 @@ issueにコメントを追加します。
   "body": string          // コメントの内容
 }
 ```
-#### 10. create_pull_request
+#### create_pull_request
 新しいプルリクエストを作成します。
 ```typescript
 {
@@ -140,19 +124,8 @@ issueにコメントを追加します。
   "maintainer_can_modify": boolean // (任意) メンテナの編集を許可
 }
 ```
-#### 11. merge_pull_request
-プルリクエストをマージします。
-```typescript
-{
-  "owner": string,          // リポジトリのオーナー
-  "repo": string,          // リポジトリ名
-  "pull_number": number,    // マージするPR番号
-  "commit_title": string,   // (任意) マージコミットのタイトル
-  "commit_message": string, // (任意) マージコミットの詳細
-  "merge_method": string    // (任意) マージ方法（'merge', 'squash', 'rebase'）
-}
-```
-#### 12. search_repositories
+
+#### search_repositories
 GitHubリポジトリを検索します。
 ```typescript
 {
@@ -161,7 +134,8 @@ GitHubリポジトリを検索します。
   "perPage": number   // (任意) 1ページあたりの結果数（最大100）
 }
 ```
-#### 13. search_code
+
+#### search_code
 コードを検索します。
 ```typescript
 {
@@ -171,7 +145,8 @@ GitHubリポジトリを検索します。
   "per_page": number  // (任意) 1ページあたりの結果数（最大100）
 }
 ```
-#### 14. search_issues
+
+#### search_issues
 issueとプルリクエストを検索します。
 ```typescript
 {
@@ -185,7 +160,7 @@ issueとプルリクエストを検索します。
 
 ### puppeteer
 
-#### 1. puppeteer_navigate
+#### puppeteer_navigate
 ブラウザでURLに移動します。
 ```typescript
 {
@@ -194,7 +169,7 @@ issueとプルリクエストを検索します。
   "allowDangerous": boolean // (任意) セキュリティを下げる危険な設定を許可するかどうか
 }
 ```
-#### 2. puppeteer_screenshot
+#### puppeteer_screenshot
 ページ全体または特定要素のスクリーンショットを取得します。
 ```
 {
@@ -204,21 +179,21 @@ issueとプルリクエストを検索します。
   "height": number    // (任意、デフォルト: 600) 高さ
 }
 ```
-#### 3. puppeteer_click
+#### puppeteer_click
 ページ上の要素をクリックします。
 ```
 {
   "selector": string  // (必須) クリックする要素のCSSセレクタ
 }
 ```
-#### 4. puppeteer_hover
+#### puppeteer_hover
 ページ上の要素にホバーします。
 ```
 {
   "selector": string  // (必須) ホバーする要素のCSSセレクタ
 }
 ```
-#### 5. puppeteer_fill
+#### puppeteer_fill
 フォームの入力欄に値を入力します。
 ```
 {
@@ -226,7 +201,7 @@ issueとプルリクエストを検索します。
   "value": string    // (必須) 入力する値
 }
 ```
-#### 6. puppeteer_select
+#### puppeteer_select
 SELECT要素で値を選択します。
 ```
 {
@@ -234,11 +209,179 @@ SELECT要素で値を選択します。
   "value": string    // (必須) 選択する値
 }
 ```
-#### 7. puppeteer_evaluate
+#### puppeteer_evaluate
 ブラウザコンソールでJavaScriptを実行します。
 ```
 {
   "script": string   // (必須) 実行するJavaScriptコード
+}
+```
+
+### notion
+
+#### API-post-database-query
+データベースをクエリします。
+```typescript
+{
+  "database_id": string,       // (必須) Notionデータベースの識別子
+  "filter_properties": string[], // (任意) 特定のページプロパティ値IDのリスト
+  "filter": object,            // (任意) 返されるページを制限するフィルター条件
+  "sorts": object[],           // (任意) 結果の並べ替え条件
+  "start_cursor": string,      // (任意) このカーソル以降の結果を返します
+  "page_size": number,         // (任意) レスポンスに含める項目数。最大: 100
+  "archived": boolean,         // (任意) アーカイブされたアイテムを含めるか
+  "in_trash": boolean          // (任意) ゴミ箱内のアイテムを含めるか
+}
+```
+
+#### API-post-search
+タイトルで検索します。
+```typescript
+{
+  "query": string,          // (任意) ページとデータベースのタイトルと比較するテキスト
+  "sort": object,           // (任意) 結果の並び順を決める条件
+  "filter": object,         // (任意) 結果をページまたはデータベースのみに制限する条件
+  "start_cursor": string,   // (任意) このカーソル以降の結果を返します
+  "page_size": number       // (任意) レスポンスに含める項目数。最大: 100
+}
+```
+
+#### API-get-block-children
+ブロックの子要素を取得します。
+```typescript
+{
+  "block_id": string,      // (必須) ブロックの識別子
+  "start_cursor": string,  // (任意) このカーソル以降の結果を返します
+  "page_size": number      // (任意) レスポンスに含める項目数。最大: 100
+}
+```
+
+#### API-patch-block-children
+ブロックの子要素を追加します。
+```typescript
+{
+  "block_id": string,     // (必須) ブロックまたはページの識別子
+  "children": object[],   // (必須) コンテナブロックに追加する子コンテンツ
+  "after": string         // (任意) 新しいブロックを追加する位置の直前のブロックID
+}
+```
+
+#### API-retrieve-a-block
+ブロックを取得します。
+```typescript
+{
+  "block_id": string     // (必須) Notionブロックの識別子
+}
+```
+
+#### 9. API-update-a-block
+ブロックを更新します。
+```typescript
+{
+  "block_id": string,   // (必須) Notionブロックの識別子
+  "type": string,       // (任意) 更新するプロパティを持つブロックタイプ
+  "archived": boolean   // (任意) trueでブロックをアーカイブ、falseで復元
+}
+```
+
+#### API-delete-a-block
+ブロックを削除します。
+```typescript
+{
+  "block_id": string    // (必須) Notionブロックの識別子
+}
+```
+
+#### API-retrieve-a-page
+ページを取得します。
+```typescript
+{
+  "page_id": string,           // (必須) Notionページの識別子
+  "filter_properties": string[] // (任意) 特定のページプロパティ値IDのリスト
+}
+```
+
+#### API-patch-page
+ページのプロパティを更新します。
+```typescript
+{
+  "page_id": string,      // (必須) 更新するNotionページの識別子
+  "properties": object,   // (任意) 更新するページのプロパティ値
+  "in_trash": boolean,    // (任意) trueでブロックを削除、falseで復元
+  "archived": boolean,    // (任意) アーカイブ状態
+  "icon": object,         // (任意) ページのアイコン
+  "cover": object         // (任意) ページのカバー画像
+}
+```
+
+#### API-post-page
+ページを作成します。
+```typescript
+{
+  "parent": object,       // (必須) 親オブジェクト
+  "properties": object,   // (必須) ページのプロパティ
+  "children": object[],   // (任意) 新しいページにレンダリングするコンテンツ
+  "icon": object,         // (任意) 新しいページのアイコン
+  "cover": object         // (任意) 新しいページのカバー画像
+}
+```
+
+#### API-create-a-database
+データベースを作成します。
+```typescript
+{
+  "parent": object,       // (必須) 親オブジェクト
+  "properties": object,   // (必須) データベースのプロパティスキーマ
+  "title": object[]       // (任意) データベースのタイトル
+}
+```
+
+#### API-update-a-database
+データベースを更新します。
+```typescript
+{
+  "database_id": string,  // (必須) Notionデータベースの識別子
+  "title": object[],      // (任意) データベースのタイトル
+  "description": object[], // (任意) データベースの説明
+  "properties": object    // (任意) データベースのプロパティスキーマ
+}
+```
+
+#### API-retrieve-a-database
+データベースを取得します。
+```typescript
+{
+  "database_id": string   // (必須) Notionデータベースの識別子
+}
+```
+
+#### API-retrieve-a-page-property
+ページのプロパティ項目を取得します。
+```typescript
+{
+  "page_id": string,      // (必須) Notionページの識別子
+  "property_id": string,  // (必須) ページプロパティの識別子
+  "page_size": number,    // (任意) 1ページあたりのプロパティ項目数。デフォルト: 100
+  "start_cursor": string  // (任意) ページ分割されたプロパティのカーソル
+}
+```
+
+#### 18. API-retrieve-a-comment
+コメントを取得します。
+```typescript
+{
+  "block_id": string,     // (必須) NotionブロックまたはページのID
+  "start_cursor": string, // (任意) このカーソル以降の結果を返します
+  "page_size": number     // (任意) レスポンスに含める項目数。最大: 100
+}
+```
+
+#### API-create-a-comment
+コメントを作成します。
+```typescript
+{
+  "parent": object,       // (必須) コメントを含むページ
+  "rich_text": object[]   // (必須) コメントのリッチテキスト内容
 }
 ```
 
@@ -248,10 +391,8 @@ SELECT要素で値を選択します。
 プロジェクト内で関連のありそうなコードを確認する
 
 ### ステップ3
-必要があれば、パッケージなどのドキュメントの内容を確認する
-1. 知りたいドキュメントのURLをユーザーに確認
-2. ページを開く
-3. ドキュメントの内容を確認する
+必要があれば、パッケージなどのドキュメントのページを確認する
+※ ドキュメントのURLがわからない場合は、ユーザーに確認する
 
 ### ステップ4
 issueを作成する
@@ -270,3 +411,7 @@ issueを作成する
 
 ### ステップ9
 プルリクを作成し、変更のレビュー依頼を行う
+
+### ステップ10
+notionのデータベースに関連のドキュメントがある場合は、更新する
+notionのデータベースに関連のドキュメントがない場合は、作成する
