@@ -1,65 +1,18 @@
-import { geminiService } from '@/services'
-import { cache as libCache, properties } from '@/lib'
-import { generateHash } from '@/utils'
-import { GEMINI_API_KEY_SCRIPT_PROPERTY } from '@/config'
+import { Properties } from './lib/properties';
+import { CustomFunctionRepository } from './infrastructure/repositories/CustomFunctionRepository';
+import { CustomFunctionService } from './domain/services/CustomFunctionService';
+import { GeminiService } from './infrastructure/external/GeminiService';
+import { GenerateContentUseCase } from './application/useCases/GenerateContentUseCase';
+import { CustomFunctionController } from './interfaces/api/CustomFunctionController';
 
-global.onOpen = () => {
-  // カスタムメニューを追加
-  const ui = SpreadsheetApp.getUi()
-  ui.createMenu('GEMINI').addItem('APIキーを登録する', 'showApiKeyInputForm').addToUi()
-}
+const properties = new Properties();
+const customFunctionRepository = new CustomFunctionRepository(properties);
+const customFunctionService = new CustomFunctionService(customFunctionRepository);
+const geminiService = new GeminiService(process.env.GEMINI_API_KEY || '');
+const generateContentUseCase = new GenerateContentUseCase(geminiService, customFunctionService);
+const customFunctionController = new CustomFunctionController(customFunctionService);
 
-/**
- * APIキーを入力するためのダイアログを表示します。
- */
-global.showApiKeyInputForm = () => {
-  const html = HtmlService.createHtmlOutputFromFile('static/settingApiKey')
-    .setWidth(400)
-    .setHeight(200)
-  SpreadsheetApp.getUi().showModalDialog(html, 'APIキーを入力してください。')
-}
-
-/**
- * APIキーを保存します。
- */
-global.saveApiKey = (apiKey: string) => {
-  properties.set(GEMINI_API_KEY_SCRIPT_PROPERTY, apiKey)
-}
-
-/**
- * GEMNI API に質問をできるカスタム関数です。
- * @param {string} contents 質問内容
- * @param {string} referenceCell 参照セル
- * @return {string} GEMINI API からの回答
- * @customfunction
- */
-global.GEMINI = (contents = '岐阜県の県庁所在地', referenceCell = '') => {
-  if (Array.isArray(referenceCell)) {
-    throw Error('複数のセルに対する参照は対応しておりません。')
-  }
-
-  const prompt = `${contents}:${referenceCell}`
-
-  const cacheKey = `gemini:${generateHash(prompt)}`
-  const cache = libCache(cacheKey)
-  const cacheValue = cache.get()
-
-  Logger.log(cacheValue)
-
-  if (cacheValue) {
-    return cacheValue
-  }
-
-  const payload = geminiService.createGeminiPayLoad(prompt)
-
-  const response = geminiService.requestGemini(payload)
-
-  const text = geminiService.getResponseText(response)
-
-  if (text) {
-    cache.set(text)
-    return text
-  } else {
-    return '回答がありません。'
-  }
-}
+export {
+  generateContentUseCase,
+  customFunctionController
+};
