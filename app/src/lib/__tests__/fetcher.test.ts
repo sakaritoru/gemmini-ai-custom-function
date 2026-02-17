@@ -30,6 +30,52 @@ describe('fetcher', () => {
     expect(result).toEqual(mockData)
   })
 
+  test('正常系: 空オブジェクトのレスポンスを返すこと', () => {
+    const mockData = {}
+    const mockResponseObj = new MockResponse(JSON.stringify(mockData))
+
+    mockFetch.mockReturnValue(mockResponseObj)
+
+    const url = 'https://example.com/api/empty'
+    const options = { method: 'get' } as GoogleAppsScript.URL_Fetch.URLFetchRequestOptions
+    const result = fetcher<typeof mockData>(url, options)
+
+    expect(mockFetch).toHaveBeenCalledWith(url, options)
+    expect(result).toEqual({})
+  })
+
+  test('正常系: POSTリクエストでボディオプションを渡せること', () => {
+    const mockData = { id: 1, created: true }
+    const mockResponseObj = new MockResponse(JSON.stringify(mockData))
+
+    mockFetch.mockReturnValue(mockResponseObj)
+
+    const url = 'https://example.com/api/users'
+    const options = {
+      method: 'post',
+      contentType: 'application/json',
+      payload: JSON.stringify({ name: 'test' }),
+    } as GoogleAppsScript.URL_Fetch.URLFetchRequestOptions
+    const result = fetcher<typeof mockData>(url, options)
+
+    expect(mockFetch).toHaveBeenCalledWith(url, options)
+    expect(result).toEqual(mockData)
+  })
+
+  test('正常系: getContentTextがUTF-8エンコーディングで呼ばれること', () => {
+    const mockData = { message: 'テスト' }
+    const mockResponseObj = new MockResponse(JSON.stringify(mockData))
+    const spy = jest.spyOn(mockResponseObj, 'getContentText')
+
+    mockFetch.mockReturnValue(mockResponseObj)
+
+    const url = 'https://example.com/api'
+    const options = { method: 'get' } as GoogleAppsScript.URL_Fetch.URLFetchRequestOptions
+    fetcher(url, options)
+
+    expect(spy).toHaveBeenCalledWith('UTF-8')
+  })
+
   test('異常系: エラーが発生した場合は例外をスローすること', () => {
     // UrlFetchApp.fetchのモック実装でエラーをスロー
     const errorMessage = 'Network error'

@@ -2,6 +2,7 @@
 module.exports = {
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   preset: 'ts-jest',
+  setupFiles: ['./src/lib/__mocks__/global.ts'],
   testEnvironment: 'node',
   testMatch: ['**/__tests__/**/*.test.ts'],
   transform: {
